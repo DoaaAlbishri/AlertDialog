@@ -10,20 +10,49 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 
 class MainActivity : AppCompatActivity() {
-    lateinit var button : Button
-    lateinit var textview : TextView
+    lateinit var button: Button
+    lateinit var textview: TextView
     var str = " "
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         button = findViewById(R.id.button)
         textview = findViewById(R.id.textView)
-        button.setOnClickListener {
-            customAlert()
-        }
 
+        button.setOnClickListener {
+            //customAlert()
+            showdialog()
+        }
     }
-    private fun customAlert(){
+
+    private fun showdialog(){
+        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.dialog, null)
+        dialogBuilder.setTitle("Alert Dialog")
+        dialogBuilder.setMessage("Enter your message:")
+        dialogBuilder.setView(dialogView)
+        val editText = dialogView.findViewById<EditText>(R.id.editText)
+        val textView2 = dialogView.findViewById<TextView>(R.id.textView2)
+        val tvBtn = dialogView.findViewById<Button>(R.id.tv)
+        val goBtn = dialogView.findViewById<Button>(R.id.go)
+
+            tvBtn.setOnClickListener {
+                str = editText.text.toString()
+                textView2.text = str
+            }
+
+            goBtn.setOnClickListener {
+                str = editText.text.toString()
+                val intent = Intent(this, MainActivity2::class.java)
+                intent.putExtra("message", str)
+                startActivity(intent)
+            }
+            dialogBuilder.show()
+    }
+
+
+    private fun customAlert() {
         // first we create a variable to hold an AlertDialog builder
         val dialogBuilder = AlertDialog.Builder(this)
         // then we set up the input
@@ -31,14 +60,12 @@ class MainActivity : AppCompatActivity() {
         // here we set the message of our alert dialog
         dialogBuilder.setMessage("Enter your message:")
                 // positive button text and action
-                .setPositiveButton("TV", DialogInterface.OnClickListener {
-                    dialog, id ->
+                .setPositiveButton("TV", DialogInterface.OnClickListener { dialog, id ->
                     str = input.text.toString()
-                    textview.text= str
+                    textview.text = str
                 })
                 // negative button text and action
-                .setNegativeButton("Go", DialogInterface.OnClickListener {
-                    dialog, id ->
+                .setNegativeButton("Go", DialogInterface.OnClickListener { dialog, id ->
                     str = input.text.toString()
                     val intent = Intent(this, MainActivity2::class.java)
                     intent.putExtra("message", str)
@@ -54,32 +81,4 @@ class MainActivity : AppCompatActivity() {
         alert.show()
     }
 
-/*
-    private fun customAlert(){
-        // first we create a variable to hold an AlertDialog builder
-        val dialogBuilder = AlertDialog.Builder(this)
-        // here we set the message of our alert dialog
-        dialogBuilder.setMessage("Enter your message:")
-        dialogBuilder.setView(R.layout.dialog)
-        val tvbtn = findViewById<Button>(R.id.tv)
-        tvbtn.setOnClickListener {
-            val input = findViewById<EditText>(R.id.editText)
-            val m = input.text.toString()
-            val output = findViewById<TextView>(R.id.textView2)
-            output.text= m
-        }
-        // negative button text and action
-        val gobtn = findViewById<Button>(R.id.go)
-        gobtn.setOnClickListener {
-            val intent = Intent(this, MainActivity2::class.java)
-            intent.putExtra("message", "hello")
-            startActivity(intent)
-        }
-        // create dialog box
-        val alert = dialogBuilder.create()
-        // set title for alert dialog box
-        alert.setTitle("Alert")
-        alert.show()
-    }
-*/
 }
